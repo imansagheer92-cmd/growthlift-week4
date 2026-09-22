@@ -1,22 +1,31 @@
 require("dotenv").config();
 
+const express = require("express");
+
 const mongoose = require("mongoose");
 const Task = require("./models/Task");
 
 const helmet = require("helmet");
 const cors = require("cors");
 
+const authRoutes = require("./routes/auth");
+
+const app = express();
+
 mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log("MongoDB connected"))
     .catch(err => console.log("MongoDB connection error:", err));
 
-const express = require("express");
+
 
 app.use(helmet());
 app.use(cors());
 
-const app = express();
+
 app.use(express.json());
+
+app.use("/api/auth", authRoutes);
+
 const PORT = 3000;
 
 app.use((req, res, next) => {
